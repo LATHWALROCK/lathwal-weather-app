@@ -30,16 +30,21 @@
             padding: 20px;
             text-align: center;
         }
-        .json-data {
-            font-family: "Courier New", monospace;
-            background: #f0f0f0;
-            color: #333;
-            padding: 15px;
-            border-radius: 8px;
-            white-space: pre-wrap;
-            word-wrap: break-word;
+        .details-list {
             text-align: left;
+            margin: 20px auto;
+            padding: 20px;
+            background: #f0f0f0;
+            border-radius: 8px;
             box-shadow: inset 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .details-list li {
+            font-size: 1rem;
+            margin: 10px 0;
+            color: #333;
+        }
+        .details-list li span {
+            font-weight: bold;
         }
         .cta {
             display: inline-block;
@@ -64,9 +69,9 @@
     <div class="container">
         <h1>Order Details</h1>
         <div class="content">
-            <div class="json-data" id="json-container">
-                <!-- JSON Data will appear here -->
-            </div>
+            <ul class="details-list" id="details-container">
+                <!-- JSON Data will be formatted as key-value pairs -->
+            </ul>
         </div>
     </div>
 
@@ -83,15 +88,18 @@
             };
         }
 
-        // Extract parameters and build the JSON data dynamically
+        // Extract query parameters
         const jsonData = getQueryParams();
 
-        // Format the JSON data for readability
-        document.getElementById("json-container").textContent = JSON.stringify(jsonData, null, 4);
-
-        // Handle empty JSON data gracefully
+        // Format JSON data into an HTML list
+        const detailsContainer = document.getElementById("details-container");
         if (Object.values(jsonData).every(value => !value)) {
-            document.getElementById("json-container").textContent = "No order details available.";
+            detailsContainer.innerHTML = '<li>No order details available.</li>'; // Handle empty data gracefully
+        } else {
+            Object.entries(jsonData).forEach(([key, value]) => {
+                const listItem = `<li><span>${key}:</span> ${value || "Not provided"}</li>`;
+                detailsContainer.innerHTML += listItem;
+            });
         }
     </script>
 </body>
